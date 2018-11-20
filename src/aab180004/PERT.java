@@ -19,7 +19,6 @@ import java.util.Scanner;
 
 public class PERT extends GraphAlgorithm<PERT.PERTVertex> {
 	int maxTime;
-	int criticalPathLength;
 	int numOfCriticalNodes;
 	Vertex s;
 	Vertex t;
@@ -41,7 +40,6 @@ public class PERT extends GraphAlgorithm<PERT.PERTVertex> {
     public PERT(Graph g) {
 		super(g, new PERTVertex(null));
 		this.maxTime =0;
-		this.criticalPathLength = 0;
 		this.numOfCriticalNodes = 0;
 		this.s = g.getVertex(1);
 		this.t = g.getVertex(g.size());
@@ -80,31 +78,35 @@ public class PERT extends GraphAlgorithm<PERT.PERTVertex> {
                 }
             }
             get(u).slack = get(u).lc - get(u).ec;
+            if(get(u).slack == 0){
+                get(u).isCritical = true;
+                numOfCriticalNodes++;
+            }
         }
 		return true;
     }
     public int ec(Vertex u) {
-	return 0;
+	    return get(u).ec;
     }
 
     public int lc(Vertex u) {
-	return 0;
+        return get(u).lc;
     }
 
     public int slack(Vertex u) {
-	return 0;
+	    return get(u).slack;
     }
 
     public int criticalPath() {
-	return 0;
+	    return maxTime;
     }
 
     public boolean critical(Vertex u) {
-	return false;
+	    return get(u).isCritical;
     }
 
     public int numCritical() {
-	return 0;
+	    return numOfCriticalNodes;
     }
 
     // setDuration(u, duration[u.getIndex()]);
@@ -112,8 +114,13 @@ public class PERT extends GraphAlgorithm<PERT.PERTVertex> {
 		PERT pert = new PERT(g);
         for(Vertex u: g) {
             pert.setDuration(u, duration[u.getIndex()]);
-            g.addEdge(pert.s.getIndex(),u.getIndex(),0);
-            g.addEdge(u.getIndex(),pert.t.getIndex(),0);
+            if(u.getName() != 1){
+                g.addEdge(pert.s.getIndex(),u.getIndex(),0);
+            }
+            if(u.getName() != g.size()){
+                g.addEdge(u.getIndex(),pert.t.getIndex(),0);
+            }
+
         }
         if(pert.pert()){
             return pert;
