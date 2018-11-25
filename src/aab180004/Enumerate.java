@@ -1,11 +1,15 @@
 
 /** Starter code for permutations and combinations of distinct items
- *  @author
+ *  @author Achyut Arun Bhandiwad - AAB180004
+ *  @author Nirbhay Sibal - NXS180002
+ *  @author Vineet Vats - VXV180008
  **/
 
 package aab180004;
 
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Random;
 
 public class Enumerate<T> {
     T[] arr;
@@ -38,8 +42,22 @@ public class Enumerate<T> {
 
     // n = arr.length, choose k things, d elements arr[0..d-1] done
     // c more elements are needed from arr[d..n-1].  d = k-c.
-    public void permute(int c) {  // To do for LP4
-    }
+	public void permute(int c) { // To do for LP4
+		if (c == 0) {
+			visit(arr);
+		} else {
+			int d = k - c;
+			for (int i = d; i < arr.length; i++) {
+				if (app.select(arr[i])) {
+					swap(d, i);
+					permute(c - 1);
+					swap(d, i);
+					app.unselect(arr[i]);
+				}
+
+			}
+		}
+	}
 
     // choose c items from A[0..i-1].  In SP11-opt
     public void combine(int i, int c) {
@@ -54,8 +72,8 @@ public class Enumerate<T> {
     }
 
     public void visit(T[] array) {
-	count++;
-	app.visit(array, k);
+        count++;
+	    app.visit(array, k);
     }
     
     //----------------------Nested class: Approver-----------------------
@@ -65,7 +83,9 @@ public class Enumerate<T> {
     // Extend this class in algorithms that need to enumerate permutations with precedence constraints
     public static class Approver<T> {
 	/* Extend permutation by item? */
-	public boolean select(T item) { return true; }
+	public boolean select(T item) {
+		return (int)item < 4;
+	}
 
         /* Backtrack selected item */
 	public void unselect(T item) { }
@@ -73,8 +93,13 @@ public class Enumerate<T> {
 	/* Visit a permutation or combination */
 	public void visit(T[] array, int k) {
 	    for (int i = 0; i < k; i++) {
-		System.out.print(array[i] + " ");
+	    	if(!select(array[i])){
+				return;
+			}
 	    }
+		for (int i = 0; i < k; i++) {
+				System.out.print(array[i] + " ");
+		}
 	    System.out.println();
 	}
     }

@@ -1,5 +1,7 @@
 /* Driver code for PERT algorithm (LP4)
- * @author
+ *  @author Achyut Arun Bhandiwad - AAB180004
+ *  @author Nirbhay Sibal - NXS180002
+ *  @author Vineet Vats - VXV180008
  */
 
 // change package to your netid
